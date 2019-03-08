@@ -53,6 +53,7 @@ class CSVToPG(PGHelper):
                 else:
                     print(line_dict['emp_title'])
                     print(type(line_dict['emp_title']))
+                    print(pd.isnull(line_dict['emp_title']))
                     print(v.errors)
 
     def change_csv_file_name(self, ori_name, table_name):

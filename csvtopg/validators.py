@@ -1,4 +1,4 @@
-from cerberus import Validator
+from csvvalidator import CSVValidator
 
 cols = [
     'id', 'member_id', 'loan_amnt', 'funded_amnt', 'funded_amnt_inv', 'term',
@@ -55,44 +55,44 @@ terms = ['36 months', '60 months']
 all_schema = {
     'acc_now_delinq': {'type': 'number'},
     'addr_state': {'type': 'string', 'allowed': addr_states},
-    'all_util': {'type': 'number'},
+    'all_util': {'type': 'number', 'nullable': True},
     'annual_inc': {'type': 'number'},
-    'annual_inc_joint': {'type': 'number'},
+    'annual_inc_joint': {'type': 'number', 'nullable': True},
     'application_type': {'type': 'string', 'allowed': application_types},
     'collection_recovery_fee': {'type': 'number'},
     'collections_12_mths_ex_med': {'type': 'number'},
     'delinq_2yrs': {'type': 'number'},
-    'desc': {'anyof': [{'type': 'number'}, {'type': 'string'}]},
+    'desc': {'type': 'string', 'nullable': True},
     'dti': {'type': 'number'},
-    'dti_joint': {'type': 'number'},
+    'dti_joint': {'type': 'number', 'nullable': True},
     'earliest_cr_line': {'type': 'string'},
-    'emp_length': {'anyof': [{'type': 'number'}, {'type': 'string'}]},
-    'emp_title': {'anyof': [{'type': 'number'}, {'type': 'string'}]},
+    'emp_length': {'type': 'string', 'nullable': True},
+    'emp_title': {'type': 'string', 'nullable': True},
     'funded_amnt': {'type': 'number'},
     'funded_amnt_inv': {'type': 'number'},
     'grade': {'type': 'string', 'allowed': grades},
     'home_ownership': {'type': 'string', 'allowed': home_ownerships},
     'id': {'type': 'number'},
-    'il_util': {'type': 'number'},
+    'il_util': {'type': 'number', 'nullable': True},
     'initial_list_status': {'type': 'string', 'allowed': initial_list_status},
-    'inq_fi': {'type': 'number'},
-    'inq_last_12m': {'type': 'number'},
+    'inq_fi': {'type': 'number', 'nullable': True},
+    'inq_last_12m': {'type': 'number', 'nullable': True},
     'inq_last_6mths': {'type': 'number'},
     'installment': {'type': 'number'},
     'int_rate': {'type': 'number'},
     'issue_d': {'type': 'string'},
     'last_credit_pull_d': {'type': 'string'},
     'last_pymnt_amnt': {'type': 'number'},
-    'last_pymnt_d': {'anyof': [{'type': 'number'}, {'type': 'string'}]},
+    'last_pymnt_d': {'type': 'string', 'nullable': True},
     'loan_amnt': {'type': 'number'},
     'loan_status': {'type': 'string'},
-    'max_bal_bc': {'type': 'number'},
+    'max_bal_bc': {'type': 'number', 'nullable': True},
     'member_id': {'type': 'number'},
     'mths_since_last_delinq': {'type': 'number', 'nullable': True},
     'mths_since_last_major_derog': {'type': 'number', 'nullable': True},
     'mths_since_last_record': {'type': 'number', 'nullable': True},
     'mths_since_rcnt_il': {'type': 'number', 'nullable': True},
-    'next_pymnt_d': {'anyof': [{'type': 'number'}, {'type': 'string'}]},
+    'next_pymnt_d': {'type': 'string', 'nullable': True},
     'open_acc': {'type': 'number', 'nullable': True},
     'open_acc_6m': {'type': 'number', 'nullable': True},
     'open_il_12m': {'type': 'number', 'nullable': True},
@@ -111,7 +111,7 @@ all_schema = {
     'revol_util': {'type': 'number'},
     'sub_grade': {'type': 'string', 'allowed': sub_grades},
     'term': {'type': 'string'},
-    'title': {'type': 'string'},
+    'title': {'type': 'string', 'nullable': True},
     'tot_coll_amt': {'type': 'number', 'nullable': True},
     'tot_cur_bal': {'type': 'number', 'nullable': True},
     'total_acc': {'type': 'number'},
@@ -125,11 +125,11 @@ all_schema = {
     'total_rev_hi_lim': {'type': 'number', 'nullable': True},
     'url': {'type': 'string'},
     'verification_status': {'type': 'string'},
-    'verification_status_joint': {'anyof': [{'type': 'number'}, {'type': 'string'}]},
+    'verification_status_joint': {'type': 'string', 'nullable': True},
     'zip_code': {'type': 'string'}
 }
 
-all_validator = Validator(all_schema)
+all_validator = CSVValidator(all_schema)
 
 validators = {
     'all': all_validator
