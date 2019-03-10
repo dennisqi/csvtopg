@@ -52,7 +52,7 @@ pymnt_plans = ['y', 'n']
 
 terms = ['36 months', '60 months']
 
-all_schema = {
+all_tb_schema = {
     'acc_now_delinq': {'type': 'number', 'nullable': True},
     'addr_state': {'type': 'string', 'allowed': addr_states},
     'all_util': {'type': 'number', 'nullable': True},
@@ -129,8 +129,8 @@ all_schema = {
     'zip_code': {'type': 'string'}
 }
 
-all_validator = CSVValidator(all_schema)
+all_tb_validator = CSVValidator(all_tb_schema)
 
 validators = {
-    'all': all_validator
+    'all_tb': all_tb_validator
 }
