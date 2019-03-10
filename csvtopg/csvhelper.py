@@ -45,7 +45,10 @@ def change_csv_file_name(ori_name, table_name):
 
     'loan.csv', 'usertb' => 'loan_usertb.csv'
     """
-    return ori_name[:-4] + '_%s.csv' % table_name
+
+
+def get_base_filename(ori_name):
+    return ori_name[:-4]
 
 
 def convert_to_dt(val, format):
