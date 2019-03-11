@@ -24,10 +24,11 @@ class CSVToPG(PGHelper):
     :param table_name_usecols: A list of tables the CSV file can be splited into,
         loan.csv can be split into 'user' table and 'loan_record' table.
     :param csv_cleaned_filename: The CSV file name to write cleaned CSV file into.
+    :param alter_tables: A dict of tuples containing table_name and alter query.
     """
 
     def __init__(
-            self, user, password, database, csv_file, table_creations, update,
+            self, user, password, database, csv_file, table_creations, update, alter_tables,
             dt_cols=[], table_name_usecols=[], csv_cleaned_filename=None, pk='id'):
         super().__init__(user, password, database)
         self.csv_file = csv_file
@@ -37,6 +38,7 @@ class CSVToPG(PGHelper):
         self.table_creations = table_creations
         self.update = update
         self.pk = pk
+        self.alter_tables = alter_tables
 
         # If no cleaned output file specified,
         #   use the same name as csv_file and add '_clean' at the end.
@@ -125,6 +127,12 @@ class CSVToPG(PGHelper):
             # Create table for table_name.
             # Call self.drop_table(table_name) if necessary.
             self.create_table(table_name)
+
+            if table_name in self.alter_tables:
+                try:
+                    self.pghelper.execute(self.alter_tables[table_name])
+                except Exception as e:
+                    print(str(e))
 
             # CSV valid record and invalid record output filenames
             valid_output_filename = self.csv_add_tail(self.csv_cleaned_filename, table_name)
@@ -215,7 +223,11 @@ if __name__ == '__main__':
         'all_tb': LOAN_TABLE_CREATION_QUERY
     }
 
+    alter_table_query = "ALTER TABLE all_tb ADD COLUMN test_add_column TEXT;"
+
+    alter_tables = {'all_tb': alter_table_query}
+
     csvtopg = CSVToPG(
         user, password, database, csv_filename, table_creations, update=True,
-        dt_cols=dt_cols, pk='id')
+        alter_tables=alter_tables, dt_cols=dt_cols, pk='id')
     csvtopg.load_csv_to_pg()
