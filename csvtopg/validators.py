@@ -1,4 +1,4 @@
-from csvvalidator import CSVValidator
+from csv_validator import CSVValidator
 
 # Columns expected to have
 cols = [
