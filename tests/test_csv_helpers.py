@@ -24,11 +24,11 @@ class TestCSVHelpers(unittest.TestCase):
         null = float('NaN')
         self.assertTrue(pd.isnull(convert_to_dt(null)))
 
-        bY = 'Dec-2018'
+        bY = '12-2018'
         expected_bY = '2018-12-01'
         self.assertEqual(expected_bY, convert_to_dt(bY))
 
-        by = 'Dec-18'
+        by = '12-18'
         expected_by = '2018-12-01'
         self.assertEqual(expected_by, convert_to_dt(by))
 

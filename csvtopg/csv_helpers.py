@@ -49,13 +49,14 @@ def get_base_filename(ori_name):
 
 
 def convert_to_dt(val):
+    print(val)
     if not pd.isnull(val):
         try:
-            dt = datetime.strptime(val, '%b-%y')
+            dt = datetime.strptime(val, '%m-%y')
             return dt.strftime('%Y-%m-%d')
         except ValueError as ve:
             try:
-                dt = datetime.strptime(val, '%b-%Y')
+                dt = datetime.strptime(val, '%m-%Y')
                 return dt.strftime('%Y-%m-%d')
             except Exception as e:
                 return float('nan')

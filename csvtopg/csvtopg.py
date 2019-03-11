@@ -130,7 +130,7 @@ class CSVToPG(PGHelper):
 
             if table_name in self.alter_tables:
                 try:
-                    self.pg_helper.execute(self.alter_tables[table_name])
+                    self.pg_helper.execute(self.alter_tables[table_name], [])
                 except Exception as e:
                     print(str(e))
 
@@ -176,6 +176,12 @@ class CSVToPG(PGHelper):
                         if self.update:
                             self.delete_record(line_dict[self.pk], table_name)
                             self.write_db(line_dict, table_name)
+                            csv_helpers.write_csv(
+                                [line_dict],
+                                valid_output_filename,
+                                mode=valid_mode,
+                                header=valid_header,
+                                columns=columns)
                     except Exception as e:
                         print(line_dict)
                         print(str(e))
