@@ -1,4 +1,5 @@
 import os
+import sys
 import json
 import pandas as pd
 import csvhelper
@@ -128,7 +129,6 @@ class CSVToPG(PGHelper):
 
             # Create table for table_name.
             # Call self.drop_table(table_name) if necessary.
-            self.drop_table(table_name)
             self.create_table(table_name)
 
             # CSV valid record and invalid record output filenames
@@ -213,7 +213,13 @@ if __name__ == '__main__':
         'all_tb': LOAN_TABLE_CREATION_QUERY
     }
 
+    csv_filename = sys.argv[1]
+
+    if csv_filename[-4:].lower() != '.csv':
+        print(csv_filename)
+        raise ValueError('Needed to be a csv file')
+
     csvtopg = CSVToPG(
-        user, password, database, '../data/loan.csv', table_creations, update=True,
+        user, password, database, csv_filename, table_creations, update=True,
         dt_cols=dt_cols, pk='id')
     csvtopg.load_csv_to_pg()
