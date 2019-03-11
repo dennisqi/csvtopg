@@ -200,6 +200,11 @@ class CSVToPG(PGHelper):
 
 
 if __name__ == '__main__':
+
+    if csv_filename[-4:].lower() != '.csv':
+        print(csv_filename)
+        raise ValueError('Needed to be a csv file')
+
     user = secrets.CP_PG_USER
     password = secrets.CP_PG_PASSWORD
     database = secrets.CP_PG_DATABASE
@@ -214,10 +219,6 @@ if __name__ == '__main__':
     }
 
     csv_filename = sys.argv[1]
-
-    if csv_filename[-4:].lower() != '.csv':
-        print(csv_filename)
-        raise ValueError('Needed to be a csv file')
 
     csvtopg = CSVToPG(
         user, password, database, csv_filename, table_creations, update=True,
