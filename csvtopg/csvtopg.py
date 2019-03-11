@@ -3,7 +3,7 @@ import json
 import pandas as pd
 import csv_helpers
 import secrets
-from pghelper import PGHelper
+from pg_helper import PGHelper
 from queries import LOAN_TABLE_CREATION_QUERY
 from queries import insert_head, insert_body, insert_tail
 from validators import validators, cols
@@ -47,7 +47,7 @@ class CSVToPG(PGHelper):
             base_filename = csv_helpers.get_base_filename(self.csv_file)
             self.csv_cleaned_filename = base_filename + '_cleaned.csv'
 
-        self.pghelper = PGHelper(user, password, database)
+        self.pg_helper = PGHelper(user, password, database)
 
     def generate_table_name_dataframes(self):
         """Generate a list of tuples contain table names and dataframes.
@@ -62,11 +62,11 @@ class CSVToPG(PGHelper):
 
     def drop_table(self, table_name):
         drop_all_tb_query = """DROP TABLE IF EXISTS %s""" % table_name
-        self.pghelper.execute(drop_all_tb_query, [])
+        self.pg_helper.execute(drop_all_tb_query, [])
 
     def create_table(self, table_name):
         creation_query = self.table_creations[table_name]
-        self.pghelper.execute(creation_query, [])
+        self.pg_helper.execute(creation_query, [])
 
     def csv_add_tail(self, file_path, added):
         """Added table name to the end of filename.
@@ -94,10 +94,10 @@ class CSVToPG(PGHelper):
             + insert_body \
             + ','.join('%s' for _ in range(len(keys))) \
             + insert_tail
-        self.pghelper.execute(insert_query, list(values))
+        self.pg_helper.execute(insert_query, list(values))
 
     def delete_record(self, pk, table_name):
-        self.pghelper.execute('DELETE FROM %s WHERE %s = %d' % (table_name, self.pk, pk), [])
+        self.pg_helper.execute('DELETE FROM %s WHERE %s = %d' % (table_name, self.pk, pk), [])
 
     def write_invalid_reason(self, reason_filename, line_dict, errors):
         with open(reason_filename, 'a') as f:
