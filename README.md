@@ -37,3 +37,32 @@ For each table:
     * Validate this record.
     * Insert into table.
     * Write into valid/invalid file.
+
+
+There are a few options when initialize the CSVToPG.
+* **table_creations**: A dictionray of table creation queries.
+```python
+{
+    'user_tb': '''
+        CREATE TABLE IF NOT EXISTS user_tb (
+            id NUMERIC NOT NULL PRIMARY KEY,
+            name TEXT
+        );'''
+}
+```
+* **update**: Indicates whether or not update the record in database if find the same pk.
+* **dt_cols**: Datatime column names, will be convert to datetime str format.
+```python
+dt_cols = ['date_borrowed']
+# Record: 'Dec-09' => 2009-12-01
+# Record: 'Dec-2009' => 2009-12-01
+```
+* **table_name_usecols**: A list of tables the CSV file can be splited into (e.g. loan.csv can be split into 'user' table and 'loan_record' table if needed).
+* **alter_tables**: A dictionary of tuples containing table_name and alter query.
+```python
+{
+    'all_tb': '''
+    ALTER TABLE all_tb ADD COLUMN test_add_column TEXT;
+    '''
+}
+```
