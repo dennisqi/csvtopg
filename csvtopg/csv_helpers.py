@@ -49,7 +49,6 @@ def get_base_filename(ori_name):
 
 
 def convert_to_dt(val):
-    print(val)
     if not pd.isnull(val):
         try:
             dt = datetime.strptime(val, '%m-%y')
