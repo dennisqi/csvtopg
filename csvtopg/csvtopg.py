@@ -20,11 +20,11 @@ class CSVToPG(PGHelper):
     :param table_creations: A dictionray of table creation queries.
     :param update: Whether or not update the record (using the latest CSV file)
         that is already in the table.
-    :param dt_cols: Datatime column names, will be convert to datetime.
+    :param dt_cols: Datatime column names, will be convert to datetime str format.
     :param table_name_usecols: A list of tables the CSV file can be splited into,
         loan.csv can be split into 'user' table and 'loan_record' table.
     :param csv_cleaned_filename: The CSV file name to write cleaned CSV file into.
-    :param alter_tables: A dict of tuples containing table_name and alter query.
+    :param alter_tables: A dictionary of tuples containing table_name and alter query.
     """
 
     def __init__(
