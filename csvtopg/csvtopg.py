@@ -140,8 +140,9 @@ class CSVToPG(PGHelper):
 
                 # Provide the validate for that table
                 v = validators[table_name]
+                valid = v.validate(line_dict)
 
-                if v.validate(line_dict):
+                if valid:
 
                     # Decide if append or write into file
                     valid_mode = 'a' if valid_wrote_header else 'w'

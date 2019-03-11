@@ -138,6 +138,7 @@ all_tb_schema = {
 }
 
 all_tb_validator = CSVValidator(all_tb_schema)
+all_tb_validator.allow_unknown = True
 
 validators = {
     'all_tb': all_tb_validator
