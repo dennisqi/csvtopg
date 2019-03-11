@@ -37,6 +37,13 @@ class TestCSVHelpers(unittest.TestCase):
         expected_headers = ['header1', 'header2', 'header_3']
         self.assertEqual(expected_headers, get_header(csv))
 
+    def test_read_df_lines(self):
+        csv = 'data/test.csv'
+        df = pd.read_csv(csv)
+        expected = [{'header1': 1, 'header2': 2, 'header_3': 3}]
+        result = list(read_df_lines(df))
+        self.assertEqual(expected, result)
+
 
 if __name__ == '__main__':
     unittest.main()
