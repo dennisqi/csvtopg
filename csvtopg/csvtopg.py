@@ -10,9 +10,6 @@ from validators import validators, cols
 from psycopg2 import IntegrityError
 
 
-FORMAT = '%b-%y'
-
-
 class CSVToPG(PGHelper):
     """Used to read, clean, and write a CSV file into Postgres DB.
 
@@ -155,7 +152,7 @@ class CSVToPG(PGHelper):
                     # # If there are string type datatime column
                     # #   add another column with datatime type
                     for col in self.dt_cols:
-                        line_dict[col] = csv_helpers.convert_to_dt(line_dict[col], FORMAT)
+                        line_dict[col] = csv_helpers.convert_to_dt(line_dict[col])
 
                     try:
                         self.write_db(line_dict, table_name)

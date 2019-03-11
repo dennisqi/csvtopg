@@ -14,7 +14,7 @@ def read_df_lines(df):
 
 
 def get_header(csv):
-    return pd.read_csv(csv, index_col=0, nrows=0).columns.tolist()
+    return pd.read_csv(csv, nrows=0).columns.tolist()
 
 
 def write_csv(cleaned_csv, csv_out, index_labels=None, mode='w', header=False, columns=[]):
@@ -40,25 +40,22 @@ def is_valid(line, validator):
     return validator(line)
 
 
-def change_csv_file_name(ori_name, table_name):
-    """Add table name at the end of ori nameself.
-
-    'loan.csv', 'usertb' => 'loan_usertb.csv'
-    """
-
-
 def get_base_filename(ori_name):
+    if type(ori_name) != str:
+        raise TypeError('origin filename must be a string.')
+    if len(ori_name) <= 4 or ori_name[-4:].lower() != '.csv':
+        raise ValueError('Invalid origin filename.')
     return ori_name[:-4]
 
 
-def convert_to_dt(val, format):
+def convert_to_dt(val):
     if not pd.isnull(val):
         try:
-            dt = datetime.strptime(val, '%m-%y')
+            dt = datetime.strptime(val, '%b-%y')
             return dt.strftime('%Y-%m-%d')
-        except ValueError as e:
+        except ValueError as ve:
             try:
-                dt = datetime.strptime(val, '%m-%Y')
+                dt = datetime.strptime(val, '%b-%Y')
                 return dt.strftime('%Y-%m-%d')
             except Exception as e:
                 return float('nan')
