@@ -5,8 +5,10 @@ import csvhelper
 import secrets
 from pghelper import PGHelper
 # str_map_double, str_map_single
-from queries import LOAN_TABLE_CREATION_QUERY, insert_head, insert_body, insert_tail
+from queries import LOAN_TABLE_CREATION_QUERY
+from queries import insert_head, insert_body, insert_tail
 from validators import validators, cols
+from psycopg2 import IntegrityError
 
 
 FORMAT = '%b-%y'
@@ -20,6 +22,8 @@ class CSVToPG(PGHelper):
     :param database: PostgreSQL DB database name.
     :param csv_file: The CSV file to read from.
     :param table_creations: A dictionray of table creation queries.
+    :param update: Whether or not update the record (using the latest CSV file)
+        that is already in the table.
     :param dt_cols: Datatime column names, will be convert to datetime.
     :param table_name_usecols: A list of tables the CSV file can be splited into,
         loan.csv can be split into 'user' table and 'loan_record' table.
@@ -27,14 +31,16 @@ class CSVToPG(PGHelper):
     """
 
     def __init__(
-            self, user, password, database, csv_file, table_creations,
-            dt_cols=[], table_name_usecols=[], csv_cleaned_filename=None):
+            self, user, password, database, csv_file, table_creations, update,
+            dt_cols=[], table_name_usecols=[], csv_cleaned_filename=None, pk='id'):
         super().__init__(user, password, database)
         self.csv_file = csv_file
         self.csv_cleaned_filename = csv_cleaned_filename
         self.table_name_usecols = table_name_usecols
         self.dt_cols = dt_cols
         self.table_creations = table_creations
+        self.update = update
+        self.pk = pk
 
         # If no cleaned output file specified,
         #   use the same name as csv_file and add '_clean' at the end.
@@ -82,7 +88,6 @@ class CSVToPG(PGHelper):
         :param table_name: Table name.
         """
         keys, values = line_dict.keys(), line_dict.values()
-
         # write into db
         insert_query = \
             insert_head % table_name \
@@ -91,6 +96,9 @@ class CSVToPG(PGHelper):
             + ','.join('%s' for _ in range(len(keys))) \
             + insert_tail
         self.pghelper.execute(insert_query, list(values))
+
+    def delete_record(self, pk, table_name):
+        self.pghelper.execute('DELETE FROM %s WHERE %s = %d' % (table_name, self.pk, pk), [])
 
     def write_invalid_reason(self, reason_filename, line_dict, errors):
         with open(reason_filename, 'a') as f:
@@ -120,7 +128,7 @@ class CSVToPG(PGHelper):
 
             # Create table for table_name.
             # Call self.drop_table(table_name) if necessary.
-            self.drop_table(table_name)
+            # self.drop_table(table_name)
             self.create_table(table_name)
 
             # CSV valid record and invalid record output filenames
@@ -151,14 +159,19 @@ class CSVToPG(PGHelper):
                     for col in self.dt_cols:
                         line_dict[col] = csvhelper.convert_to_dt(line_dict[col], FORMAT)
 
-                    self.write_db(line_dict, table_name)
+                    try:
+                        self.write_db(line_dict, table_name)
 
-                    csvhelper.write_csv(
-                        [line_dict],
-                        valid_output_filename,
-                        mode=valid_mode,
-                        header=valid_header,
-                        columns=columns)
+                        csvhelper.write_csv(
+                            [line_dict],
+                            valid_output_filename,
+                            mode=valid_mode,
+                            header=valid_header,
+                            columns=columns)
+                    except IntegrityError as ie:
+                        if self.update:
+                            self.delete_record(line_dict[self.pk], table_name)
+                            self.write_db(line_dict, table_name)
 
                     # Changed wrote_header to False after write the first line
                     valid_wrote_header = True
@@ -198,6 +211,6 @@ if __name__ == '__main__':
     }
 
     csvtopg = CSVToPG(
-        user, password, database, '../data/loan_head.csv', table_creations,
-        dt_cols=dt_cols)
+        user, password, database, '../data/loan_head.csv', table_creations, update=True,
+        dt_cols=dt_cols, pk='id')
     csvtopg.load_csv_to_pg()

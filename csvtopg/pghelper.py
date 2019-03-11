@@ -25,11 +25,11 @@ class PGHelper:
         """
         if not self.connection:
             self.connect()
-
-        cur = self.connection.cursor()
-        cur.execute(query, params)
         self.connection.commit()
-        return cur
+        cursor = self.connection.cursor()
+        cursor.execute(query, params)
+        self.connection.commit()
+        return cursor
 
     def connect(self):
         """Connect to database using proper parameters."""
