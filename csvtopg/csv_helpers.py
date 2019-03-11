@@ -49,7 +49,6 @@ def get_base_filename(ori_name):
 
 
 def convert_to_dt(val):
-    print('thisi', val, type(val))
     if not pd.isnull(val):
         try:
             dt = datetime.strptime(val, '%y-%b')
@@ -76,5 +75,5 @@ def convert_to_dt(val):
             return dt.strftime('%Y-%m-%d')
         except Exception as e:
             pass
-    return float('nan')
-    # return val
+    # return float('nan')
+    return val
