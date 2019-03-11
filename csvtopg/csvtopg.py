@@ -128,7 +128,7 @@ class CSVToPG(PGHelper):
 
             # Create table for table_name.
             # Call self.drop_table(table_name) if necessary.
-            # self.drop_table(table_name)
+            self.drop_table(table_name)
             self.create_table(table_name)
 
             # CSV valid record and invalid record output filenames
@@ -172,6 +172,9 @@ class CSVToPG(PGHelper):
                         if self.update:
                             self.delete_record(line_dict[self.pk], table_name)
                             self.write_db(line_dict, table_name)
+                    except Exception as e:
+                        print(line_dict)
+                        print(str(e))
 
                     # Changed wrote_header to False after write the first line
                     valid_wrote_header = True
@@ -211,6 +214,6 @@ if __name__ == '__main__':
     }
 
     csvtopg = CSVToPG(
-        user, password, database, '../data/loan_head.csv', table_creations, update=True,
+        user, password, database, '../data/loan.csv', table_creations, update=True,
         dt_cols=dt_cols, pk='id')
     csvtopg.load_csv_to_pg()
