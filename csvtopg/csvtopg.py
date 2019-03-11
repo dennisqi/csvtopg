@@ -1,11 +1,9 @@
-import os
 import sys
 import json
 import pandas as pd
-import csvhelper
+import csv_helpers
 import secrets
 from pghelper import PGHelper
-# str_map_double, str_map_single
 from queries import LOAN_TABLE_CREATION_QUERY
 from queries import insert_head, insert_body, insert_tail
 from validators import validators, cols
@@ -46,7 +44,7 @@ class CSVToPG(PGHelper):
         # If no cleaned output file specified,
         #   use the same name as csv_file and add '_clean' at the end.
         if not self.csv_cleaned_filename:
-            base_filename = csvhelper.get_base_filename(self.csv_file)
+            base_filename = csv_helpers.get_base_filename(self.csv_file)
             self.csv_cleaned_filename = base_filename + '_cleaned.csv'
 
         self.pghelper = PGHelper(user, password, database)
@@ -60,7 +58,7 @@ class CSVToPG(PGHelper):
         """
         if not self.table_name_usecols:
             return [('all_tb', pd.read_csv(self.csv_file))]
-        return [csvhelper.split_csv(self.csv_file, table_name, usecols) for table_name, usecols in self.table_name_usecols]
+        return [csv_helpers.split_csv(self.csv_file, table_name, usecols) for table_name, usecols in self.table_name_usecols]
 
     def drop_table(self, table_name):
         drop_all_tb_query = """DROP TABLE IF EXISTS %s""" % table_name
@@ -75,7 +73,7 @@ class CSVToPG(PGHelper):
 
         loan_clean.csv => load_clean_table_name.csv
         """
-        base_filename = csvhelper.get_base_filename(file_path)
+        base_filename = csv_helpers.get_base_filename(file_path)
         return base_filename + '_%s.csv' % added
 
     def csv_add_head(self, file_path, added):
@@ -137,7 +135,7 @@ class CSVToPG(PGHelper):
             reason_filename = self.csv_add_head(valid_output_filename, 'reason')
 
             # For each line or record of DataFrame (each record of the CSV file)
-            for line_dict in csvhelper.read_df_lines(df):
+            for line_dict in csv_helpers.read_df_lines(df):
 
                 # Setup columns and will not change the order
                 if not columns:
@@ -157,12 +155,12 @@ class CSVToPG(PGHelper):
                     # # If there are string type datatime column
                     # #   add another column with datatime type
                     for col in self.dt_cols:
-                        line_dict[col] = csvhelper.convert_to_dt(line_dict[col], FORMAT)
+                        line_dict[col] = csv_helpers.convert_to_dt(line_dict[col], FORMAT)
 
                     try:
                         self.write_db(line_dict, table_name)
 
-                        csvhelper.write_csv(
+                        csv_helpers.write_csv(
                             [line_dict],
                             valid_output_filename,
                             mode=valid_mode,
@@ -186,7 +184,7 @@ class CSVToPG(PGHelper):
                     # Set if need to write a header
                     invalid_header = False if invalid_wrote_header else True
 
-                    csvhelper.write_csv(
+                    csv_helpers.write_csv(
                         [line_dict],
                         invalid_filename,
                         mode=invalid_mode,
