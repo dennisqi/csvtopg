@@ -1,5 +1,6 @@
 from csvvalidator import CSVValidator
 
+# Columns expected to have
 cols = [
     'id', 'member_id', 'loan_amnt', 'funded_amnt', 'funded_amnt_inv', 'term',
     'int_rate', 'installment', 'grade', 'sub_grade', 'emp_title', 'emp_length',
@@ -20,6 +21,7 @@ cols = [
     'all_util', 'total_rev_hi_lim', 'inq_fi', 'total_cu_tl', 'inq_last_12m'
 ]
 
+# Possible States for addr_states column
 addr_states = [
     'AL', 'AK', 'AZ', 'AR', 'CA', 'CO', 'CT', 'DC', 'DE', 'FL', 'GA',
     'HI', 'ID', 'IL', 'IN', 'IA', 'KS', 'KY', 'LA', 'ME', 'MD',
@@ -28,8 +30,10 @@ addr_states = [
     'SD', 'TN', 'TX', 'UT', 'VT', 'VA', 'WA', 'WV', 'WI', 'WY'
 ]
 
+# Possible application types
 application_types = ['INDIVIDUAL', 'JOINT']
 
+# Possible grades and sub grades
 grades = ['A', 'B', 'C', 'D', 'E', 'F', 'G']
 sub_grades = [
     'A1', 'A2', 'A3', 'A4', 'A5',
@@ -41,22 +45,26 @@ sub_grades = [
     'G1', 'G2', 'G3', 'G4', 'G5'
 ]
 
-
+# Allowed home_ownerships
 home_ownerships = ['RENT', 'OWN', 'MORTGAGE', 'OTHER']
 
+# Allowed initial_list_status
 initial_list_status = ['W', 'F', 'w', 'f']
 
+# Allowed policy_codes
 policy_codes = [1, 2]
 
+# Allowed pymnt_plans
 pymnt_plans = ['y', 'n']
 
+# Allowed terms
 terms = ['36 months', '60 months']
 
 all_tb_schema = {
     'acc_now_delinq': {'type': 'number', 'nullable': True},
     'addr_state': {'type': 'string', 'allowed': addr_states},
     'all_util': {'type': 'number', 'nullable': True},
-    'annual_inc': {'type': 'number'},
+    'annual_inc': {'type': 'number', 'nullable': True},
     'annual_inc_joint': {'type': 'number', 'nullable': True},
     'application_type': {'type': 'string', 'allowed': application_types},
     'collection_recovery_fee': {'type': 'number'},
@@ -65,7 +73,7 @@ all_tb_schema = {
     'desc': {'type': 'string', 'nullable': True},
     'dti': {'type': 'number'},
     'dti_joint': {'type': 'number', 'nullable': True},
-    'earliest_cr_line': {'type': 'string'},
+    'earliest_cr_line': {'type': 'string', 'nullable': True},
     'emp_length': {'type': 'string', 'nullable': True},
     'emp_title': {'type': 'string', 'nullable': True},
     'funded_amnt': {'type': 'number'},
@@ -77,7 +85,7 @@ all_tb_schema = {
     'initial_list_status': {'type': 'string', 'allowed': initial_list_status},
     'inq_fi': {'type': 'number', 'nullable': True},
     'inq_last_12m': {'type': 'number', 'nullable': True},
-    'inq_last_6mths': {'type': 'number'},
+    'inq_last_6mths': {'type': 'number', 'nullable': True},
     'installment': {'type': 'number'},
     'int_rate': {'type': 'number'},
     'issue_d': {'type': 'string'},
